@@ -19,6 +19,14 @@ public class UserService {
         return "Hello from service";
     }
 
+    public void deleteUserById(long id) {
+        this.userRepository.deleteById(id);
+    }
+
+    public User getUserById(long id) {
+        return this.userRepository.findById(id);
+    }
+
     public List<User> getAllUsers() {
         return this.userRepository.findAll();
     }
