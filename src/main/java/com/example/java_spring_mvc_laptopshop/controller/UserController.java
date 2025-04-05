@@ -28,19 +28,25 @@ public class UserController {
 
         model.addAttribute("eric", "test");
         model.addAttribute("hoidanit", "from controller with model");
-        return "hello"; // Chuyển tới trang hello.jsp
+        return "hello"; // Chuyển hướng tới trang hello.jsp
     }
 
     @RequestMapping("/admin/user")
     public String getUserPage(Model model) {
+        List<User> users = this.userService.getAllUsers();
+        model.addAttribute("users", users);
+        return "/admin/user/table-user";
+    }
+
+    @RequestMapping("/admin/user/create")
+    public String createUserPage(Model model) {
         model.addAttribute("newUser", new User());
         return "/admin/user/create";
     }
 
     @RequestMapping(value = "/admin/user/create", method = RequestMethod.POST)
-    public String createUserPage(Model model, @ModelAttribute("newUser") User hoidanit) {
-        System.out.println("Run here " + hoidanit);
+    public String getCreateUserPage(Model model, @ModelAttribute("newUser") User hoidanit) {
         this.userService.handleSaveUser(hoidanit);
-        return "hello";
+        return "redirect:/admin/user";
     }
 }
