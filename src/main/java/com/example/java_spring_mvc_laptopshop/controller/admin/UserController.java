@@ -1,48 +1,58 @@
-package com.example.java_spring_mvc_laptopshop.controller;
+package com.example.java_spring_mvc_laptopshop.controller.admin;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.java_spring_mvc_laptopshop.domain.User;
+import com.example.java_spring_mvc_laptopshop.service.UploadService;
 import com.example.java_spring_mvc_laptopshop.service.UserService;
 
 @Controller
 public class UserController {
 
     private final UserService userService;
+    private final UploadService uploadService;
+    private PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService,
+            UploadService uploadService,
+            PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.uploadService = uploadService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/")
-    public String getHomePage(Model model) {
-        List<User> arrUsers = this.userService.getAllUsersByEmail("1@gmail.com");
-        System.out.println(arrUsers);
+    // @GetMapping("/")
+    // public String getHomePage(Model model) {
+    // List<User> arrUsers = this.userService.getAllUsersByEmail("1@gmail.com");
+    // System.out.println(arrUsers);
 
-        model.addAttribute("eric", "test");
-        model.addAttribute("hoidanit", "from controller with model");
-        return "hello"; // Chuyển hướng tới trang hello.jsp
-    }
+    // model.addAttribute("eric", "test");
+    // model.addAttribute("hoidanit", "from controller with model");
+    // return "hello"; // Chuyển hướng tới trang hello.jsp
+    // }
 
     @GetMapping("/admin/user")
     public String getUserPage(Model model) {
         List<User> users = this.userService.getAllUsers();
         model.addAttribute("users", users);
-        return "/admin/user/table-user";
+        return "/admin/user/show";
     }
 
     @GetMapping("/admin/user/{id}")
     public String getUserDetailPage(Model model, @PathVariable long id) {
         User user = this.userService.getUserById(id);
         model.addAttribute("user", user);
-        return "/admin/user/user-detail";
+        return "/admin/user/detail";
     }
 
     @GetMapping("/admin/user/create")
@@ -52,7 +62,17 @@ public class UserController {
     }
 
     @PostMapping("/admin/user/create")
-    public String postCreateUser(Model model, @ModelAttribute("newUser") User newUser) {
+    public String postCreateUser(Model model,
+            @ModelAttribute("newUser") User newUser,
+            @RequestParam("hoidanitFile") MultipartFile file) {
+
+        String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
+        String hashPassword = this.passwordEncoder.encode(newUser.getPassword());
+
+        newUser.setAvatar(avatar);
+        newUser.setPassword(hashPassword);
+        newUser.setRole(this.userService.getRoleByName(newUser.getRole().getName()));
+
         this.userService.handleSaveUser(newUser);
         return "redirect:/admin/user";
     }
