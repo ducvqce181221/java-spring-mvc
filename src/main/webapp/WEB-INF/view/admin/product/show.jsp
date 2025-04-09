@@ -52,17 +52,17 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <c:forEach var="u" items="${users}">
+                                                <c:forEach var="p" items="${products}">
                                                     <tr>
-                                                        <th scope="row">${u.id}</th>
-                                                        <td>${u.email}</td>
-                                                        <td>${u.fullName}</td>
-                                                        <td>${u.role.name}</td>
-                                                        <td> <a href="/admin/user/${u.id}"
+                                                        <th scope="row">${p.id}</th>
+                                                        <td>${p.name}</td>
+                                                        <td>${p.price}</td>
+                                                        <td>${p.factory}</td>
+                                                        <td> <a href="/admin/product/${p.id}"
                                                                 class="btn btn-success">View</a>
-                                                            <a href="/admin/user/update/${u.id}"
+                                                            <a href="/admin/product/update/${p.id}"
                                                                 class="btn btn-warning">Update</a>
-                                                            <a href="/admin/user/delete/${u.id}"
+                                                            <a href="/admin/product/delete/${p.id}"
                                                                 class="btn btn-danger">Delete</a>
                                                         </td>
                                                     </tr>

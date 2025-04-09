@@ -15,6 +15,14 @@
                 <script>
                     $(document).ready(() => {
                         const avatarFile = $("#avatarFile");
+                        const currentImage = "${product.image}";
+
+                        if (currentImage) {
+                            const urlImage = "/images/product/" + currentImage;
+                            $("#avatarPreview").attr("src", urlImage);
+                            $("#avatarPreview").css({ "display": "block" });
+                        }
+
                         avatarFile.change(function (e) {
                             const imgURL = URL.createObjectURL(e.target.files[0]);
                             $("#avatarPreview").attr("src", imgURL);
@@ -35,15 +43,21 @@
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
                                     <li class="breadcrumb-item"><a href="/admin/product">Products</a></li>
-                                    <li class="breadcrumb-item active">Create Product</li>
+                                    <li class="breadcrumb-item active">Update Product</li>
                                 </ol>
                                 <div class="mt-5">
                                     <div class="row">
                                         <div class="col-md-6 col-12 mx-auto">
-                                            <h3>Create a product</h3>
+                                            <h3>Update a product</h3>
                                             <hr>
-                                            <form:form action="/admin/product/create" method="post"
+                                            <form:form action="/admin/product/update" method="post"
                                                 modelAttribute="product" enctype="multipart/form-data">
+
+                                                <div class="col-md-6 mb-3" style="display: none;">
+                                                    <label class="form-label">Id:</label>
+                                                    <form:input type="text" class="form-control" path="id" />
+                                                </div>
+
                                                 <div class="row">
                                                     <div class="col-md-6 mb-3">
                                                         <c:set var="errorName">
@@ -135,7 +149,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <button type="submit" class="btn btn-primary">Create</button>
+                                                    <button type="submit" class="btn btn-warning">Update</button>
                                                 </div>
                                             </form:form>
                                         </div>

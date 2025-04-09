@@ -1,10 +1,13 @@
 package com.example.java_spring_mvc_laptopshop.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "products")
@@ -12,12 +15,25 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @NotEmpty(message = "Tên sản phẩm không được để trống")
     private String name;
+
+    @Min(value = 1, message = "Giá tiền phải lớn hơn 0")
     private double price;
+
     private String image;
+
+    @NotEmpty(message = "detailDesc không được để trống")
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String detailDesc;
+
+    @NotEmpty(message = "shortDesc không được để trống")
     private String shortDesc;
+
+    @Min(value = 1, message = "Số lượng phải lớn hơn hoặc bằng 1")
     private long quantity;
+
     private long sold;
     private String factory;
     private String target;
